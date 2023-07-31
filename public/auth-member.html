@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Member Authentication</title>
+    <style>
+        /* The CSS styles remain unchanged */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="Logo" width="300" />
+        <h1>Member Authentication</h1>
+        <form id="authMemberForm">
+            <label for="token">Token:</label>
+            <input type="token" id="token" name="token" required>
+            <button type="submit">Auth Member</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById("authMemberForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {
+                token: formData.get("token")
+            };
+
+            try {
+                const response = await fetch(".netlify/functions/auth-member", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById("message").textContent = result.message;
+                } else {
+                    document.getElementById("message").textContent = "Error: " + result.message;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("message").textContent = "An error occurred. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
