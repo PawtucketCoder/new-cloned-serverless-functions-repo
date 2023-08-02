@@ -43,12 +43,16 @@ export const handler = async (event) => {
       // Member exists, compare the hashed password
       const hashedPassword = existingMember[0].password;
       const isPasswordCorrect = await bcrypt.compare(password, hashedPassword);
+      const tokenValue = generateAccessToken(email)
 
       if (isPasswordCorrect) {
         // Password is correct, return a JWT access token
         return {
           statusCode: 200,
-          body: JSON.stringify({ message: generateAccessToken(email) })
+          headers: {
+            'Set-Cookie': `token=${tokenValue}; Path=/`
+          },
+          body: JSON.stringify({ message: 'Password Accepted' })
         };
       } else {
         // Password is incorrect, return an error
