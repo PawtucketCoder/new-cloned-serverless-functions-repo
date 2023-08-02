@@ -3,7 +3,46 @@
 <head>
     <title>Authenticated Member Page</title>
     <style>
-        /* The CSS styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        span#userEmail {
+            font-weight: bold;
+        }
+
+        button#signOutButton {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        #message {
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +78,7 @@
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
             // Redirect the user to the sign-in page or any other appropriate page
-            window.location.href = "/sign-in.html"; // Replace with your sign-in page URL
+            window.location.href = "/sign-member.html"; // Replace with your sign-in page URL
         }
 
         // Function to display the authenticated member page
