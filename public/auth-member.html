@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Authenticated Member Page</title>
+    <title>Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,6 +43,28 @@
             color: #007bff;
             margin-top: 20px;
         }
+
+        .dashboard-widget {
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .dashboard-widget h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-widget p {
+            margin-top: 10px;
+        }
+
+        .dashboard-widget .widget-icon {
+            font-size: 30px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +72,45 @@
         <h1>Welcome, <span id="userEmail"></span>!</h1>
         <button id="signOutButton">Sign Out</button>
         <div id="message"></div>
+
+        <div class="dashboard-widget">
+            <h2>Widget 1</h2>
+            <p>This is the content of Widget 1.</p>
+            <i class="widget-icon">📊</i>
+        </div>
+
+        <div class="dashboard-widget">
+            <h2>Widget 2</h2>
+            <p>This is the content of Widget 2.</p>
+            <i class="widget-icon">📅</i>
+        </div>
+        
+        <div class="dashboard-widget">
+            <h2>Widget 3</h2>
+            <p>This is the content of Widget 3.</p>
+            <i class="widget-icon">🎉</i>
+        </div>
+        
+        <div class="dashboard-widget">
+            <h2>Widget 4</h2>
+            <p>This is the content of Widget 4.</p>
+            <i class="widget-icon">🎁</i>
+        </div>
+        
+        <div class="dashboard-widget">
+            <h2>Widget 5</h2>
+            <p>This is the content of Widget 5.</p>
+            <i class="widget-icon">🎮</i>
+        </div>
+        
+        <div class="dashboard-widget">
+            <h2>Widget 6</h2>
+            <p>This is the content of Widget 6.</p>
+            <i class="widget-icon">📝</i>
+        </div>
+
+        <!-- Add more dashboard widgets here -->
+
     </div>
 
     <script>
