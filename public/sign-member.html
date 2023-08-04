@@ -95,13 +95,15 @@
               },
               body: JSON.stringify(data)
             });
-      
+
             const result = await response.json();
             if (response.ok) {
               document.getElementById("message").textContent = result.message;
       
               // Check if the response contains the token cookie
               const tokenCookie = response.headers.get("set-cookie");
+              console.log(tokenCookie);
+              
               if (tokenCookie) {
                 // Redirect to auth-member.html
                 window.location.href = "auth-member.html";
