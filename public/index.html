@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Member Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -10,7 +11,7 @@
         }
 
         .container {
-            max-width: 400px;
+            max-width: 100%;
             margin: 0 auto;
             padding: 20px;
         }
@@ -30,6 +31,8 @@
         form {
             display: flex;
             flex-direction: column;
+            max-width: 300px; /* Adjust the form width for mobile */
+            margin: 0 auto; /* Center align the form */
         }
 
         label {
@@ -61,6 +64,21 @@
             font-size: 16px;
             color: #007bff;
         }
+
+        /* Media Query for small screens */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            img {
+                width: 150px;
+            }
+
+            form {
+                max-width: 250px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -78,7 +96,6 @@
         </form>
         <div id="message"></div>
     </div>
-    
     <script>
         document.getElementById("addMemberForm").addEventListener("submit", async (event) => {
             event.preventDefault();
