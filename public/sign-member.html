@@ -7,12 +7,16 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #cccccc; /* Set the background color to #cccccc */
         }
 
         .container {
             max-width: 400px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #ffffff; /* Set a white background color for the container */
+            border-radius: 10px; /* Add rounded corners for a card-like appearance */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
         }
 
         img {
@@ -64,19 +68,26 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="logo.png" alt="Logo" width="200" />
-        <h1>Member Sign In</h1>
-        <form id="signMemberForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Sign In</button>
-        </form>
-        <div id="message"></div>
-    </div>
-
+  <div class="container">
+      <img src="logo.png" alt="Logo" width="200" />
+      <h1>Member Sign In</h1>
+      <form id="signMemberForm">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+          <button type="submit">Sign In</button>
+      </form>
+      <div id="message"></div>
+  </div>
+  
+  <!-- Add the link to auth-member.html here -->
+  <div style="text-align: center; margin-top: 10px;">
+      <a href="auth-member.html">Go to Authenticated Member Page</a>
+  </div>
+  <div style="text-align: center; margin-top: 10px;">
+    <a href="create-member.html">Go to Register Member Page</a>
+  </div>
     <script>
         document.getElementById("signMemberForm").addEventListener("submit", async (event) => {
           event.preventDefault();

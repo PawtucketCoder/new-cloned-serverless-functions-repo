@@ -7,10 +7,11 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #cccccc; /* Set the background color to #cccccc */
         }
 
         .container {
-            max-width: 400px;
+            max-width: 100%;
             margin: 0 auto;
             padding: 20px;
         }
@@ -64,6 +65,26 @@
         .dashboard-widget .widget-icon {
             font-size: 30px;
             margin-right: 10px;
+        }
+
+        /* Media Query for small screens */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            .dashboard-widget {
+                padding: 8px;
+                margin-top: 15px;
+            }
+            .dashboard-widget h2 {
+                font-size: 18px;
+            }
+            .dashboard-widget p {
+                font-size: 14px;
+            }
+            .dashboard-widget .widget-icon {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
