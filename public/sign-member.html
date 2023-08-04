@@ -101,7 +101,7 @@
               document.getElementById("message").textContent = result.message;
       
               // Check if the response contains the token cookie
-              const tokenCookie = response.headers.get("set-cookie");
+              const tokenCookie = response.headers.getSetCookie();
               console.log(tokenCookie);
               
               if (tokenCookie) {
