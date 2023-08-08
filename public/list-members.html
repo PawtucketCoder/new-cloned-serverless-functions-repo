@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Member List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ... (existing CSS styles) ... */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .password-change-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .password-change-form input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Member List</h1>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Change Password</th>
+            </tr>
+            <!-- Dynamically populate table rows using JavaScript -->
+        </table>
+    </div>
+
+    <script>
+        // Fetch members data and populate the table
+        fetch(".netlify/functions/get-members")
+            .then(response => response.json())
+            .then(data => {
+                const table = document.querySelector("table");
+                data.forEach(member => {
+                    const row = table.insertRow();
+                    row.insertCell().textContent = member.id;
+                    row.insertCell().textContent = member.username;
+                    row.insertCell().textContent = member.email;
+                    const changePasswordCell = row.insertCell();
+                    changePasswordCell.innerHTML = `
+                        <form class="password-change-form">
+                            <input type="hidden" name="username_change" value="${member.username}">
+                            <input type="password" name="currentPassword" placeholder="Current Password" required>
+                            <input type="password" name="newPassword" placeholder="New Password" required>
+                            <button type="submit">Change Password</button>
+                        </form>
+                    `;
+                    // Add event listener to each form for changing passwords
+                    const form = changePasswordCell.querySelector("form");
+                    form.addEventListener("submit", async (event) => {
+                        event.preventDefault();
+                        const formData = new FormData(form);
+                        const data = {
+                            username: formData.get("username_change"),
+                            currentPassword: formData.get("currentPassword"),
+                            newPassword: formData.get("newPassword")
+                        };
+
+                        try {
+                            const response = await fetch(".netlify/functions/change-password", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(data)
+                            });
+
+                            const result = await response.json();
+                            if (response.ok) {
+                                alert(result.message);
+                                // You can update the UI here if needed, e.g., show success message
+                            } else {
+                                alert("Error: " + result.message);
+                            }
+                        } catch (error) {
+                            console.error("Error:", error);
+                            alert("An error occurred. Please try again.");
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while fetching member data.");
+            });
+    </script>
+</body>
+</html>
