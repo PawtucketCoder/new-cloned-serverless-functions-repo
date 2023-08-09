@@ -17,8 +17,8 @@ const db = mysql.createPool({
 
 const saltRounds = 10;
 
-function generateAccessToken(email) {
-  return jwt.sign({ email }, process.env.TOKEN_SECRET, { expiresIn: '1h' }); // Set an appropriate expiration time
+function generateAccessToken(email, username) {
+  return jwt.sign({ email, username }, process.env.TOKEN_SECRET, { expiresIn: '1h' }); // Set an appropriate expiration time
 }
 
 export const handler = async (event) => {
@@ -42,8 +42,9 @@ export const handler = async (event) => {
     if (existingMember.length > 0) {
       // Member exists, compare the hashed password
       const hashedPassword = existingMember[0].password;
+      const username = existingMember[0].username;
       const isPasswordCorrect = await bcrypt.compare(password, hashedPassword);
-      const tokenValue = generateAccessToken(email)
+      const tokenValue = generateAccessToken(email, username);
 
       if (isPasswordCorrect) {
         // Password is correct, return a JWT access token

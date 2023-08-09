@@ -90,7 +90,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome, <span id="userEmail"></span>!</h1>
+        <h1>Welcome, <span id="userName"></span>!</h1>
+        <h2>Email, <span id="userEmail"></span>!</h2>
         <button id="signOutButton">Sign Out</button>
         <div id="message"></div>
 
@@ -175,9 +176,11 @@
                 // Extract the email address from the token (assuming it's a JWT)
                 const decodedToken = JSON.parse(atob(tokenValue.split(".")[1]));
                 const userEmail = decodedToken.email;
+                const userName = decodedToken.username;
 
                 // Display the user's email on the page
                 document.getElementById("userEmail").textContent = userEmail;
+                document.getElementById("userName").textContent = userName;
 
                 // Add event listener to handle sign-out button click
                 document.getElementById("signOutButton").addEventListener("click", handleSignOut);
