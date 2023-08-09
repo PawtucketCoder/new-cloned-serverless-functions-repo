@@ -7,6 +7,9 @@ publish = "public"
 [functions]
 node_bundler = "esbuild"
 
+[[plugins]]
+package = "@netlify/plugin-emails"
+
 ## Uncomment to use this redirect for Single Page Applications like create-react-app.
 ## Not needed for static site generators.
 #[[redirects]]
