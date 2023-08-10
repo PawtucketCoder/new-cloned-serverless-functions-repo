@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Member Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #cccccc; /* Set the background color to #cccccc */
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff; /* Set a white background color for the container */
+            border-radius: 10px; /* Add rounded corners for a card-like appearance */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+            height: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+      <img src="logo.png" alt="Logo" width="200" />
+      <h1>Member Verification</h1>
+      <form id="verifyMemberForm">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+          <label for="verificationCode">Verification Code:</label>
+          <input type="text" id="verificationCode" name="verificationCode" required>
+          <button type="submit">Verify</button>
+      </form>
+      <div id="message"></div>
+  </div>
+  
+  <div style="text-align: center; margin-top: 10px;">
+    <a href="index.html">Go to Register Member Page</a>
+  </div>
+    <script>
+        document.getElementById("verifyMemberForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+      
+          const formData = new FormData(event.target);
+          const data = {
+            email: formData.get("email"),
+            verificationCode: formData.get("verificationCode")
+          };
+      
+          try {
+            const response = await fetch(".netlify/functions/verify-member", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+              document.getElementById("message").textContent = result.message;
+      
+              // Check if the response contains the token cookie
+              const tokenCookie = response.headers.getSetCookie();
+              console.log(tokenCookie);
+              
+              if (tokenCookie) {
+                // Redirect to auth-member.html
+                window.location.href = "auth-member.html";
+              }
+            } else {
+              document.getElementById("message").textContent = "Error: " + result.message;
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("message").textContent = "An error occurred. Please try again.";
+          }
+        });
+      </script>
+      </body>
+      </html>
