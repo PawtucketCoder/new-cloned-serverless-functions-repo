@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Member Registration</title>
+    <title>Act Registration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -75,31 +75,28 @@
 <body>
     <div class="container">
         <img src="logo.png" alt="Logo" />
-        <h1>Member Registration</h1>
-        <form id="addMemberForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <h1>Act Registration</h1>
+        <form id="addActForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="location">Location:</label>
+            <input type="location" id="location" name="location" required>
             <button type="submit">Register</button>
         </form>
         <div id="message"></div>
     </div>
     <script>
-        document.getElementById("addMemberForm").addEventListener("submit", async (event) => {
+        document.getElementById("addActForm").addEventListener("submit", async (event) => {
             event.preventDefault();
 
             const formData = new FormData(event.target);
             const data = {
-                username: formData.get("username"),
-                email: formData.get("email"),
-                password: formData.get("password")
+                name: formData.get("name"),
+                location: formData.get("location")
             };
 
             try {
-                const response = await fetch(".netlify/functions/create-member", {
+                const response = await fetch(".netlify/functions/create-act", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

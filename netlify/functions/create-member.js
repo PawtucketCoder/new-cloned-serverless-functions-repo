@@ -121,7 +121,7 @@ export const handler = async (event) => {
                     Hi ${username},<br>
                     Use the following one-time password (OTP) to verify your email address. You can use this email address to sign-in or recover your Scene Junction account.
                   </div>
-                  <div class="verification-code">${verificationCode}</div>
+                  <div class="verification-code"><a href="http://localhost:8888/verify-member.html?email=test@test.com">${verificationCode}</a></div>
                 </div>
               </body>
             </html>

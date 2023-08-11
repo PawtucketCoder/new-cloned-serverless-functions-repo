@@ -3,69 +3,73 @@
 <head>
     <title>Member Verification</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #cccccc; /* Set the background color to #cccccc */
-        }
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #121212;
+          color: #fff;
+      }
 
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff; /* Set a white background color for the container */
-            border-radius: 10px; /* Add rounded corners for a card-like appearance */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
-        }
+      .container {
+          max-width: 100%;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #1e1e1e;
+          border-radius: 10px;
+      }
 
-        img {
-            display: block;
-            margin: 0 auto;
-            width: 200px;
-            height: auto;
-        }
+      img {
+          display: block;
+          margin: 0 auto;
+          width: 500px;
+          height: auto;
+      }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+      h1 {
+          text-align: center;
+          margin-bottom: 20px;
+      }
 
-        form {
-            display: flex;
-            flex-direction: column;
-        }
+      form {
+          display: flex;
+          flex-direction: column;
+          max-width: 500px; /* Adjust the form width for mobile */
+          margin: 0 auto; /* Center align the form */
+      }
 
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+      label {
+          font-weight: bold;
+          margin-bottom: 5px;
+      }
 
-        input {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+      input {
+          padding: 10px;
+          margin-bottom: 15px;
+          border: 1px solid #666;
+          border-radius: 5px;
+          font-size: 16px;
+          background-color: #1e1e1e;
+          color: #fff;
+      }
 
-        button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+      button {
+          background-color: #007bff;
+          color: #fff;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
+      }
 
-        #message {
-            margin-top: 10px;
-            text-align: center;
-            font-size: 16px;
-            color: #007bff;
-        }
-    </style>
+      #message {
+          margin-top: 10px;
+          text-align: center;
+          font-size: 16px;
+          color: #007bff;
+      }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -85,6 +89,22 @@
     <a href="index.html">Go to Register Member Page</a>
   </div>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            
+            if (emailParam) {
+                const emailInput = document.getElementById("email");
+                if (emailInput) {
+                    emailInput.value = emailParam;
+                }
+            }
+            
+            document.getElementById("verifyMemberForm").addEventListener("submit", async (event) => {
+                // Your existing form submission code
+            });
+        });
+
         document.getElementById("verifyMemberForm").addEventListener("submit", async (event) => {
           event.preventDefault();
       
