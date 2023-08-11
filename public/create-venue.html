@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Venue Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+            height: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 500px; /* Adjust the form width for mobile */
+            margin: 0 auto; /* Center align the form */
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="Logo" />
+        <h1>Venue Registration</h1>
+        <form id="addVenueForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="location">Location:</label>
+            <input type="location" id="location" name="location" required>
+            <button type="submit">Register</button>
+        </form>
+        <div id="message"></div>
+    </div>
+    <script>
+        document.getElementById("addVenueForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {
+                name: formData.get("name"),
+                location: formData.get("location")
+            };
+
+            try {
+                const response = await fetch(".netlify/functions/create-venue", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById("message").textContent = result.message;
+                } else {
+                    document.getElementById("message").textContent = "Error: " + result.message;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("message").textContent = "An error occurred. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
