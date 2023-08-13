@@ -79,8 +79,16 @@
         <form id="addActForm">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
+            
             <label for="location">Location:</label>
-            <input type="location" id="location" name="location" required>
+            <input type="text" id="location" name="location" required>
+
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" required>
+            
+            <label for="Bio">Bio:</label>
+            <input type="text" id="bio" name="bio" required>
+
             <button type="submit">Register</button>
         </form>
         <div id="message"></div>
@@ -92,7 +100,9 @@
             const formData = new FormData(event.target);
             const data = {
                 name: formData.get("name"),
-                location: formData.get("location")
+                location: formData.get("location"),
+                genre: formData.get("genre"),
+                bio: formData.get("bio")
             };
 
             try {

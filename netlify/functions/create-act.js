@@ -24,10 +24,10 @@ const saltRounds = 10;
 export const handler = async (event) => {  
   try {
     const body = JSON.parse(event.body);
-    const { name, location } = body;
+    const { name, location, genre, bio } = body;
 
     // Check if the act already exists in the database
-    const existingMember = await new Promise((resolve, reject) => {
+    const existingAct = await new Promise((resolve, reject) => {
       db.query('SELECT * FROM acts WHERE name=? AND location=?', [name, location],
         function (err, results, fields) {
           if (err) {
@@ -39,7 +39,7 @@ export const handler = async (event) => {
       );
     });
 
-    if (existingMember.length > 0) {
+    if (existingAct.length > 0) {
       // Act already exists, return an error
       return {
         statusCode: 409,
@@ -52,8 +52,8 @@ export const handler = async (event) => {
       // Insert the new act into the database along with created_date and modified_date
       const newMember = await new Promise((resolve, reject) => {
         db.query(
-          'INSERT INTO acts (name, location, created_date, modified_date) VALUES (?, ?, ?, ?)',
-          [name, location, currentDate, currentDate],
+          'INSERT INTO acts (name, location, genre, bio, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?)',
+          [name, location, genre, bio, currentDate, currentDate],
           function (err, results, fields) {
             if (err) {
               reject(err);
