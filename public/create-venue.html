@@ -81,20 +81,29 @@
 <form id="addVenueForm">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
+
     <label for="location">Location:</label>
-    <input type="text" id="location" name="location" required>
+    <input type="text" id="location" name="location" autocomplete="off" required>
+    <div id="location-results"></div>
+    
     <label for="capacity">Capacity:</label>
     <input type="number" id="capacity" name="capacity">
+    
     <label for="type">Type:</label>
     <input type="text" id="type" name="type">
+    
     <label for="description">Description:</label>
     <textarea id="description" name="description"></textarea>
+    
     <label for="contact">Contact Information:</label>
     <input type="text" id="contact" name="contact">
+    
     <label for="imageURL">Image URL:</label>
     <input type="url" id="imageURL" name="imageURL">
+    
     <label for="socialMedia">Social Media Links:</label>
     <input type="url" id="socialMedia" name="socialMedia">
+    
     <button type="submit">Register</button>
 </form>
 
@@ -103,6 +112,43 @@
         <div id="message"></div>
     </div>
     <script>
+                const locationInput = document.getElementById("location");
+        const locationResultsDiv = document.getElementById("location-results");
+
+        locationInput.addEventListener("input", function () {
+            const query = this.value;
+
+            if (query.length > 2) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let results = [];
+                        data.forEach(item => {
+                            results.push(item.display_name);
+                        });
+                        displayLocationResults(results);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching location data:", error);
+                    });
+            }
+        });
+
+        function displayLocationResults(results) {
+            let dropdownHtml = '<ul>';
+            results.forEach(result => {
+                dropdownHtml += '<li style="cursor: pointer;" onclick="selectLocation(\'' + result + '\')">' + result + '</li>';
+            });
+            dropdownHtml += '</ul>';
+            locationResultsDiv.innerHTML = dropdownHtml;
+        }
+
+        function selectLocation(location) {
+            locationInput.value = location;
+            locationResultsDiv.innerHTML = '';
+        }
+
+
         document.getElementById("addVenueForm").addEventListener("submit", async (event) => {
             event.preventDefault();
 

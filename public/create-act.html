@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Act Registration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,8 +36,10 @@
         form {
             display: flex;
             flex-direction: column;
-            max-width: 500px; /* Adjust the form width for mobile */
-            margin: 0 auto; /* Center align the form */
+            max-width: 500px;
+            /* Adjust the form width for mobile */
+            margin: 0 auto;
+            /* Center align the form */
         }
 
         label {
@@ -70,8 +73,27 @@
             font-size: 16px;
             color: #007bff;
         }
+
+        #location-results ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            border: 1px solid #efdfdf;
+            border-radius: 5px;
+            background-color: #1e1e1e;
+        }
+
+        #location-results li {
+            padding: 8px 10px;
+        }
+
+        #location-results li:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <img src="logo.png" alt="Logo" />
@@ -79,13 +101,14 @@
         <form id="addActForm">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
-            
+
             <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required>
+            <input type="text" id="location" name="location" autocomplete="off" required>
+            <div id="location-results"></div>
 
             <label for="genre">Genre:</label>
             <input type="text" id="genre" name="genre" required>
-            
+
             <label for="Bio">Bio:</label>
             <input type="text" id="bio" name="bio" required>
 
@@ -94,6 +117,42 @@
         <div id="message"></div>
     </div>
     <script>
+        const locationInput = document.getElementById("location");
+        const locationResultsDiv = document.getElementById("location-results");
+
+        locationInput.addEventListener("input", function () {
+            const query = this.value;
+
+            if (query.length > 2) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let results = [];
+                        data.forEach(item => {
+                            results.push(item.display_name);
+                        });
+                        displayLocationResults(results);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching location data:", error);
+                    });
+            }
+        });
+
+        function displayLocationResults(results) {
+            let dropdownHtml = '<ul>';
+            results.forEach(result => {
+                dropdownHtml += '<li style="cursor: pointer;" onclick="selectLocation(\'' + result + '\')">' + result + '</li>';
+            });
+            dropdownHtml += '</ul>';
+            locationResultsDiv.innerHTML = dropdownHtml;
+        }
+
+        function selectLocation(location) {
+            locationInput.value = location;
+            locationResultsDiv.innerHTML = '';
+        }
+
         document.getElementById("addActForm").addEventListener("submit", async (event) => {
             event.preventDefault();
 
@@ -127,4 +186,5 @@
         });
     </script>
 </body>
+
 </html>
