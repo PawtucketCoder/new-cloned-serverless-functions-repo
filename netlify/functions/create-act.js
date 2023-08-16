@@ -1,13 +1,7 @@
 import dotenv from "dotenv";
 import mysql from 'mysql';
-// import bcrypt from 'bcrypt';
 
 dotenv.config();
-
-const { POSTMARK_API_KEY } = process.env
-const serverToken = POSTMARK_API_KEY
-// let postmark = require("postmark")
-// let client = new postmark.ServerClient(serverToken);
 
 const db = mysql.createPool({
   host: process.env.DB_HOST,
@@ -26,35 +20,57 @@ export const handler = async (event) => {
     const body = JSON.parse(event.body);
     const { name, location, genre, bio } = body;
 
-    // Check if the act already exists in the database
-    const existingAct = await new Promise((resolve, reject) => {
-      db.query('SELECT * FROM acts WHERE name=? AND location=?', [name, location],
-        function (err, results, fields) {
+    // Check if the location exists in the locations table
+    let locationId = await new Promise((resolve, reject) => {
+      db.query('SELECT id FROM locations WHERE location=?', [location], function (err, results) {
+        if (err) {
+          reject(err);
+        } else {
+          if (results.length > 0) {
+            resolve(results[0].id);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
+
+    if (!locationId) {
+      // If location doesn't exist, insert it into locations table
+      locationId = await new Promise((resolve, reject) => {
+        db.query('INSERT INTO locations (location) VALUES (?)', [location], function (err, results) {
           if (err) {
             reject(err);
           } else {
-            resolve(results);
+            resolve(results.insertId);
           }
+        });
+      });
+    }
+
+    // Check if the act already exists in the database with the new locationId
+    const existingAct = await new Promise((resolve, reject) => {
+      db.query('SELECT * FROM acts WHERE name=? AND location_id=?', [name, locationId], function (err, results) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
         }
-      );
+      });
     });
 
     if (existingAct.length > 0) {
-      // Act already exists, return an error
       return {
         statusCode: 409,
         body: JSON.stringify({ message: "Name and Location already exists" })
       };
     } else {
-      // Get the current date and time in MySQL compatible format
       const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-      // Insert the new act into the database along with created_date and modified_date
-      const newMember = await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         db.query(
-          'INSERT INTO acts (name, location, genre, bio, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?)',
-          [name, location, genre, bio, currentDate, currentDate],
-          function (err, results, fields) {
+          'INSERT INTO acts (name, location_id, genre, bio, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?)',
+          [name, locationId, genre, bio, currentDate, currentDate],
+          function (err, results) {
             if (err) {
               reject(err);
             } else {
@@ -63,11 +79,12 @@ export const handler = async (event) => {
           }
         );
       });
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Act created" })
+      };
     }
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Act created" })
-    };
   } catch (error) {
     return {
       statusCode: 500,
