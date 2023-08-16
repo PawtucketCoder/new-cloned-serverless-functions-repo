@@ -13,16 +13,15 @@ const db = mysql.createPool({
   connectTimeout: 300000
 });
 
-const saltRounds = 10;
-
-export const handler = async (event) => {  
+export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const { name, location, genre, bio } = body;
 
     // Check if the location exists in the locations table
+    const locationQuery = 'SELECT id FROM locations WHERE location = ?';
     let locationId = await new Promise((resolve, reject) => {
-      db.query('SELECT id FROM locations WHERE location=?', [location], function (err, results) {
+      db.query(locationQuery, [location], function (err, results) {
         if (err) {
           reject(err);
         } else {
@@ -49,8 +48,9 @@ export const handler = async (event) => {
     }
 
     // Check if the act already exists in the database with the new locationId
+    const actQuery = 'SELECT * FROM acts WHERE name = ? AND location_id = ?';
     const existingAct = await new Promise((resolve, reject) => {
-      db.query('SELECT * FROM acts WHERE name=? AND location_id=?', [name, locationId], function (err, results) {
+      db.query(actQuery, [name, locationId], function (err, results) {
         if (err) {
           reject(err);
         } else {
