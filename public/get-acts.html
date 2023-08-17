@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Acts Viewer</title>
+</head>
+
+<body>
+    <h1>Acts Viewer</h1>
+
+    <!-- Dropdown list for locations -->
+    <label for="locationSelect">Select a Location:</label>
+    <select id="locationSelect"></select>
+
+    <div id="actsList"></div>
+
+    <!-- JavaScript code for fetching and displaying acts and locations -->
+    <script>
+        // Get the container for displaying acts
+        const actsList = document.getElementById("actsList");
+
+        // Display acts based on selected location
+        function displayActsByLocation(locationId) {
+            // Clear the previous acts
+            actsList.innerHTML = "";
+
+            // Fetch acts data from the serverless function based on selected location
+            fetch(`/.netlify/functions/get-acts?location_id=${locationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(act => {
+                        const actDiv = document.createElement("div");
+                        actDiv.innerHTML = `
+                            <h3>${act.name}</h3>
+                            <p><strong>Genre:</strong> ${act.genre}</p>
+                            <p><strong>Bio:</strong> ${act.bio}</p>
+                            <hr>
+                        `;
+                        actsList.appendChild(actDiv);
+                    });
+                })
+                .catch(error => console.error("Error fetching acts:", error));
+        }
+
+        // Populate the dropdown list with locations
+        const locationSelect = document.getElementById("locationSelect");
+        fetch("/.netlify/functions/get-locations")
+            .then(response => response.json())
+            .then(locations => {
+                locations.forEach(location => {
+                    const option = document.createElement("option");
+                    option.value = location.id;
+                    option.textContent = location.location;
+                    locationSelect.appendChild(option);
+                });
+
+                // Add event listener for location selection
+                locationSelect.addEventListener("change", event => {
+                    const selectedLocationId = event.target.value;
+                    displayActsByLocation(selectedLocationId);
+                });
+            })
+            .catch(error => console.error("Error fetching locations:", error));
+    </script>
+</body>
+
+</html>

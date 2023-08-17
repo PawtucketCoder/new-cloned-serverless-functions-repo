@@ -1,8 +1,11 @@
+// Import required packages and libraries
 import dotenv from "dotenv";
 import mysql from 'mysql';
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Create a database connection pool using environment variables
 const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -13,8 +16,10 @@ const db = mysql.createPool({
   connectTimeout: 300000
 });
 
-export const handler = async (event) => {
+// Define the main serverless function handler
+export async function handler(event) {
   try {
+    // Parse the incoming request body containing act information
     const body = JSON.parse(event.body);
     const { name, location, genre, bio } = body;
 
@@ -34,14 +39,14 @@ export const handler = async (event) => {
       });
     });
 
+    // If location doesn't exist, insert it into locations table
     if (!locationId) {
-      // If location doesn't exist, insert it into locations table
       locationId = await new Promise((resolve, reject) => {
         db.query('INSERT INTO locations (location) VALUES (?)', [location], function (err, results) {
           if (err) {
             reject(err);
           } else {
-            resolve(results.insertId);
+            resolve(results.insertId); // Get the newly inserted location's ID
           }
         });
       });
@@ -59,13 +64,17 @@ export const handler = async (event) => {
       });
     });
 
+    // If act already exists, return a conflict response
     if (existingAct.length > 0) {
       return {
         statusCode: 409,
-        body: JSON.stringify({ message: "Name and Location already exists" })
+        body: JSON.stringify({ message: "Name and Location already exist" })
       };
     } else {
+      // Get the current date and time in MySQL compatible format
       const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+      // Insert the new act into the database along with created_date and modified_date
       await new Promise((resolve, reject) => {
         db.query(
           'INSERT INTO acts (name, location_id, genre, bio, created_date, modified_date) VALUES (?, ?, ?, ?, ?, ?)',
@@ -80,15 +89,17 @@ export const handler = async (event) => {
         );
       });
 
+      // Return a success response
       return {
         statusCode: 200,
         body: JSON.stringify({ message: "Act created" })
       };
     }
   } catch (error) {
+    // If an error occurs, return an internal server error response
     return {
       statusCode: 500,
       body: JSON.stringify(error)
     };
   }
-};
+}
